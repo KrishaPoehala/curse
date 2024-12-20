@@ -33,7 +33,7 @@ class MainRestorer extends Element {
         this.backupChannel.isAsleep = true;
         this.backupChannel.tNext = Double.MAX_VALUE;
         this.mainChannel.isInterupted = false;
-        this.mainChannel.scheduleChannel();
+        this.mainChannel.tNext = this.tNext;
         this.errorGenerator.inAct(null);
         this.tNext = Double.MAX_VALUE;
     }

@@ -60,7 +60,7 @@ class Model {
     }
 
     public void printResults(double simulationTime) {
-        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.00000");
         System.out.println("\n-----------------------РЕЗУЛЬТАТ-----------------------");
         System.out.println("Загальний час моделювання: " + simulationTime + " секунд");
 
@@ -71,7 +71,13 @@ class Model {
             if (e instanceof Create) {
                 Create c = (Create) e;
                 System.out.println("\tСтворено повідомлень: " + (e.getQuantity()) + ";");
-            } else if (e instanceof Channel) {
+            } else if(e instanceof  MainChannel) {
+                var mainC = (MainChannel)e;
+                System.out.println("\t Частота переривання повідомлень: "
+                + df.format(mainC.getInterruptionFrequency()));
+                System.out.println("\tСереднє завантаження: " + df.format(mainC.getMeanLoad() / simulationTime) + ";");
+            }
+            else if (e instanceof BackupChannel) {
                 Channel ch = (Channel) e;
                 System.out.println("\tСереднє завантаження: " + df.format(ch.getMeanLoad() / simulationTime) + ";");
                 //System.out.println("\tСередній час обробки повідомлення: " + df.format(ch.getMeanTimeIn()) + ";"); // Середній час обробки
@@ -88,8 +94,8 @@ class Model {
             } else if (e instanceof MainRestorer) {
                 MainRestorer mr = (MainRestorer) e;
                 System.out.println("\tКількість відновлень основного каналу: " + mr.getRestores() + ";");
-            } else if (e instanceof Despose) {
-                Despose d = (Despose) e;
+            } else if (e instanceof Dispose) {
+                Dispose d = (Dispose) e;
                 System.out.println("\tКількість оброблених повідомлень: " + d.getQuantity() + ";");
             }
 

@@ -21,8 +21,13 @@ class ErrorGenerator extends Element {
         super.outAct();
         mainChannel.isInterupted = true;
         mainChannel.tNext = Double.MAX_VALUE;
+        Message interuptedMessage = null;
+        if(mainChannel.isBusy){
+            interuptedMessage = mainChannel.getInteruptedMessage();
+        }
+
         ++errorsGenerated;
-        this.nextElement.inAct(null);//backupStarter
+        this.nextElement.inAct(interuptedMessage);//backupStarter
         tNext = Double.MAX_VALUE;
     }
 

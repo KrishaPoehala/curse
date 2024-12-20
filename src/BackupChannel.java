@@ -8,19 +8,11 @@ class BackupChannel extends Channel {
 
     @Override
     public void inAct(Message message) {
-        isBusy = true;
         super.inAct(message);
     }
 
-    @Override
-    public void outAct(){
-        super.outAct();
-        isBusy = false;
-        scheduleChannel();
-        nextElement.outAct();//despose
-    }
 
     public boolean canTakeMessage(){
-        return !isAsleep && !isBusy;
+        return !isAsleep;
     }
 }

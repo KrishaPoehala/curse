@@ -1,7 +1,9 @@
-class Channel extends Element {
+import java.util.LinkedList;
+import java.util.Queue;
 
-    private int inCount = 0;
-    protected boolean isBusy;
+abstract class Channel extends Element {
+    public boolean isBusy;
+    public Queue<Message> queue;
     protected double meanLoad;
     protected Message currentMessage;
     public double mean = 7,deviation = 3;
@@ -9,22 +11,29 @@ class Channel extends Element {
     public Channel(String name) {
         super(name);
         meanLoad = 0.0;
-    }
-
-    public boolean isBusy() {
-        return isBusy;
+        queue = new LinkedList<>();
+        tNext = tCurrent + getDelay(mean,deviation);
     }
 
     @Override
     public void inAct(Message message) {
         super.inAct(message);
-        inCount++;
-        currentMessage = message;
+        this.queue.add(message);
+        isBusy = true;
     }
 
     @Override
     public void outAct() {
+        isBusy = false;
+        scheduleChannel();
+        currentMessage = this.queue.poll();
+        if(currentMessage == null){
+            return;
+        }
+
         super.outAct();
+        this.nextElement.inAct(currentMessage);//dispose
+        currentMessage = null;
     }
 
     public void scheduleChannel(){
@@ -39,4 +48,6 @@ class Channel extends Element {
     public double getMeanLoad() {
         return meanLoad;
     }
+
+    public abstract  boolean canTakeMessage();
 }

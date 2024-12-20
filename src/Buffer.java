@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 class Buffer extends Element {
-    private final Queue<Message> queue;
+    public final Queue<Message> queue;
     private MainChannel mainChannel;
     private BackupChannel backupChannel;
     private double meanQueue;
@@ -31,6 +31,7 @@ class Buffer extends Element {
         super.outAct();
     }
 
+    public int lostM = 0;
     public void processQueue() {
         if(this.mainChannel.canTakeMessage()){
             this.mainChannel.inAct(queue.poll());
