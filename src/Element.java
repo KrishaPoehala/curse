@@ -1,6 +1,6 @@
 import java.util.Random;
 
-class Element {
+public class Element {
     protected String name;
     protected double tNext, tCurrent;
     protected int quantity;
@@ -8,7 +8,7 @@ class Element {
     protected double delay;
     protected Random random = new Random();
 
-    private static int nextId = 0;
+    public static int nextId = 0;
     private int id;
 
     public Element(String name) {

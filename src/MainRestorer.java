@@ -30,11 +30,9 @@ class MainRestorer extends Element {
     public void outAct() {
         super.outAct();
         restores++;
-        this.backupChannel.isAsleep = true;
-        this.backupChannel.tNext = Double.MAX_VALUE;
-        this.mainChannel.isInterupted = false;
-        this.mainChannel.tNext = this.tNext;
-        this.errorGenerator.inAct(null);
+        this.backupChannel.deactivate();
+        this.mainChannel.activate(tNext);
+        this.errorGenerator.inAct(null);//schedule next main channel's interruption
         this.tNext = Double.MAX_VALUE;
     }
 

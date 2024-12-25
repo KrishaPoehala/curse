@@ -10,6 +10,7 @@ class Create extends Element {
         super.outAct();
         tNext = tCurrent + getDelay(mean, deviation);
         Message message = new Message(tCurrent);
+        //System.out.println("Messsage " + message.id + " created at " + message.timeIn);
         if (nextElement != null) {
             nextElement.inAct(message);//buffer
         }

@@ -1,10 +1,12 @@
 class ErrorGenerator extends Element {
     private MainChannel mainChannel;
+    private double k;
     private final double mean = 200, deviation = 35;
 
-    public ErrorGenerator(String name) {
+    public ErrorGenerator(String name,double k) {
         super(name);
-        tNext = tCurrent + getDelay(mean, deviation);
+        this.k = k;
+        tNext = tCurrent + getDelay(mean + k, deviation);
     }
 
     public void setMainChannel(MainChannel mainChannel) {
@@ -13,14 +15,13 @@ class ErrorGenerator extends Element {
 
     @Override
     public void inAct(Message m){
-        tNext = tCurrent + getDelay(mean, deviation);
+        tNext = tCurrent + getDelay(mean + k, deviation);
     }
 
     @Override
     public void outAct() {
         super.outAct();
-        mainChannel.isInterupted = true;
-        mainChannel.tNext = Double.MAX_VALUE;
+        this.mainChannel.deactivate();
         Message interuptedMessage = null;
         if(mainChannel.isBusy){
             interuptedMessage = mainChannel.getInteruptedMessage();

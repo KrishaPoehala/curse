@@ -1,7 +1,8 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-class Model {
+public class Model {
+    public boolean printProgress = true;
     private final ArrayList<Element> elements;
     private double tCurrent;
     private double totalIncome;
@@ -23,12 +24,6 @@ class Model {
         while (tCurrent < time) {
             tNext = Double.MAX_VALUE;
             for (Element e : elements) {
-                if(firstIteration){
-                    tNext = elements.getFirst().tNext;
-                    event = 0;
-                    firstIteration = false;
-                    break;
-                }
 
                 if (e.getTNext() < tNext) {
                     tNext = e.getTNext();
@@ -36,9 +31,10 @@ class Model {
                 }
             }
 
+            if(printProgress){
+                System.out.println("It's time for event in " + elements.get(event).getName() + ", time = " + tNext);
+            }
 
-
-            System.out.println("It's time for event in " + elements.get(event).getName() + ", time = " + tNext);
             for (Element e : elements) {
                 e.doStatistics(tNext - tCurrent);
             }
@@ -56,7 +52,9 @@ class Model {
             }
         }
 
-        printResults(time);
+        if(printProgress){
+            printResults(time);
+        }
     }
 
     public void printResults(double simulationTime) {
@@ -76,27 +74,31 @@ class Model {
                 System.out.println("\t Частота переривання повідомлень: "
                 + df.format(mainC.getInterruptionFrequency()));
                 System.out.println("\tСереднє завантаження: " + df.format(mainC.getMeanLoad() / simulationTime) + ";");
+                System.out.println("\tСередня довжина черги: "
+                        + df.format(mainC.getMeanQueue() / simulationTime) + ";");
             }
             else if (e instanceof BackupChannel) {
                 Channel ch = (Channel) e;
                 System.out.println("\tСереднє завантаження: " + df.format(ch.getMeanLoad() / simulationTime) + ";");
-                //System.out.println("\tСередній час обробки повідомлення: " + df.format(ch.getMeanTimeIn()) + ";"); // Середній час обробки
+                System.out.println("\tСередня довжина черги: "
+                        + df.format(ch.getMeanQueue() / simulationTime) + ";");
             } else if (e instanceof Buffer) {
                 Buffer b = (Buffer) e;
                 System.out.println("\tСередня довжина черги: " + df.format(b.getMeanQueue() / simulationTime) + ";");
             } else if (e instanceof ErrorGenerator) {
                 ErrorGenerator eg = (ErrorGenerator) e;
                 System.out.println("\tКількість згенерованих помилок: " + eg.getErrorsGenerated() + ";");
-                System.out.println("\tЧастота переривання (помилок/секунду): " + df.format(eg.getErrorsGenerated() / simulationTime) + ";");//Частота переривання
             } else if (e instanceof BackupStarter) {
                 BackupStarter bs = (BackupStarter) e;
-               //System.out.println("\tКількість запусків резервного копіювання: " + bs.getBackupStarts() + ";");
+                System.out.println("\tКількість запусків резервного копіювання: " + bs.getQuantity() + ";");
             } else if (e instanceof MainRestorer) {
                 MainRestorer mr = (MainRestorer) e;
-                System.out.println("\tКількість відновлень основного каналу: " + mr.getRestores() + ";");
+                System.out.println("\tКількість відновлень основного каналу: " + mr.getQuantity() + ";");
             } else if (e instanceof Dispose) {
                 Dispose d = (Dispose) e;
                 System.out.println("\tКількість оброблених повідомлень: " + d.getQuantity() + ";");
+                System.out.println("\tСередній час передачі повідомлень по магістралі "
+                        + df.format(d.getMeanTimeInSystem()));
             }
 
             System.out.println("}\n");
@@ -105,12 +107,15 @@ class Model {
         System.out.println("------------------------------------------------------");
     }
 
-    public void calculateIncome(MainChannel mainChannel, BackupChannel backupChannel) {
+    public double getTCurrent(){return tCurrent;}
+    public ArrayList<Element> getElements(){return elements;}
+    public double calculateIncome(MainChannel mainChannel, BackupChannel backupChannel) {
         mainChannelUses = mainChannel.getQuantity();
         backupChannelUses = backupChannel.getQuantity();
         double incomeFromMain = mainChannelUses * (50 - 0.03 * kValue);
-        double incomeFromBackup = backupChannelUses * 25;
+        double incomeFromBackup = backupChannelUses * 5;
         totalIncome = incomeFromMain + incomeFromBackup;
+        return totalIncome;
     }
 
     public void setKValue(double k) {

@@ -1,8 +1,8 @@
 class MainChannel extends Channel {
     public boolean isInterupted = false;
-    private Buffer buffer;
-    public MainChannel(String name) {
-        super(name);
+    public Buffer buffer;
+    public MainChannel(String name,String channelName) {
+        super(name,channelName);
     }
 
     public  void setBuffer(Buffer b){
@@ -37,5 +37,18 @@ class MainChannel extends Channel {
 
     public double getInterruptionFrequency(){
         return (double)interuptedMessagesCount / inCount;
+    }
+
+    public void activate(double tNext) {
+        this.isInterupted = false;
+        this.tNext = tNext;
+        //when the main channel is activated its queue size has to be updated
+        //to reflect current queue's state
+        this.queueSize = queue.size();
+    }
+
+    public void deactivate(){
+        isInterupted = true;
+        tNext = Double.MAX_VALUE;
     }
 }

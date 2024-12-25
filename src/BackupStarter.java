@@ -23,8 +23,8 @@ class BackupStarter extends Element {
 
     @Override
     public void outAct(){
-        this.backupChannel.isAsleep = false;
-        this.backupChannel.tNext = tNext;
+        super.outAct();
+        this.backupChannel.activate(tNext);
         this.mainChannel.returnInteruptedMessage(interuptedMessage);
         tNext = Double.MAX_VALUE;
     }
