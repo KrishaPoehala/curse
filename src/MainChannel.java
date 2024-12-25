@@ -1,14 +1,8 @@
 class MainChannel extends Channel {
     public boolean isInterupted = false;
-    public Buffer buffer;
     public MainChannel(String name,String channelName) {
         super(name,channelName);
     }
-
-    public  void setBuffer(Buffer b){
-        this.buffer = b;
-    }
-
     @Override
     public void inAct(Message message) {
         super.inAct(message);
@@ -20,7 +14,7 @@ class MainChannel extends Channel {
     }
 
     public Message getInteruptedMessage(){
-        return this.queue.poll();
+        return this.buffer.queue.poll();
     }
 
     int inCount = 0;
@@ -44,7 +38,7 @@ class MainChannel extends Channel {
         this.tNext = tNext;
         //when the main channel is activated its queue size has to be updated
         //to reflect current queue's state
-        this.queueSize = queue.size();
+        this.queueSize = this.buffer.queue.size();
     }
 
     public void deactivate(){

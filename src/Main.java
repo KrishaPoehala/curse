@@ -9,9 +9,9 @@ public class Main {
         //geneticAlgorithm();
         //evaluateIncome(0,10000);
         var s = new CsvSaver();
-        s.saveDataToCsv("simulation_data2.csv");
+        s.saveDataToCsv("simulation_data3.csv");
         //var model = ModelSetUp.getModel(0,true);
-        //model.simulate(100000);
+        //model.simulate(50000);
     }
 
     private static void geneticAlgorithm() {

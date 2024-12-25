@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -5,25 +6,29 @@ abstract class Channel extends Element {
     public boolean isBusy;
     private double meanQueue;
     public String channelName;
-    public static Queue<Message> queue;
+    //public static Queue<Message> queue;
     public int queueSize;
     protected double meanLoad;
     protected Message currentMessage;
+    protected Buffer buffer;
+    public void setBuffer(Buffer b){
+        this.buffer = b;
+    }
     public double mean = 7, deviation = 3;
 
     public Channel(String name, String channelName) {
         super(name);
         this.channelName = channelName;
         meanLoad = 0.0;
-        queue = new LinkedList<>();
+        //queue = new LinkedList<>();
         tNext = tCurrent + getDelay(mean, deviation);
         queueSize = 0;
     }
 
+    DecimalFormat df = new DecimalFormat("0.00");
     @Override
     public void inAct(Message message) {
         super.inAct(message);
-        queue.add(message);
         queueSize++;
         isBusy = true;
     }
@@ -32,7 +37,7 @@ abstract class Channel extends Element {
     public void outAct() {
         isBusy = false;
         scheduleChannel();
-        currentMessage = queue.poll();
+        currentMessage = this.buffer.queue.poll();
         if (currentMessage == null) {
             //System.out.println("Current message is null ---------------------------");
             return;
@@ -41,7 +46,6 @@ abstract class Channel extends Element {
         super.outAct();
         currentMessage.channel = channelName;
         currentMessage.timeOut = tCurrent;
-        System.out.println(channelName + "q size current" + queueSize + "mean q size " + meanQueue / tCurrent);
         this.nextElement.inAct(currentMessage);//dispose
         currentMessage = null;
         if (queueSize > 0) {

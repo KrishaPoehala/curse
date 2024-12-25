@@ -30,7 +30,9 @@ public class ModelSetUp {
 
         mainChannel.setNextElement(dispose);
         mainChannel.setBuffer(buffer);
+
         backupChannel.setNextElement(dispose);
+        backupChannel.setBuffer(buffer);
         ArrayList<Element> openElements = new ArrayList<>() {{
             add(creator);
             add(buffer);

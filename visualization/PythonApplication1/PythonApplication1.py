@@ -45,12 +45,12 @@ def visualize_crossroads_simulation(csv_file_path):
 
     tight_layout()
 
-    filename = f"simulation_statistics_time_{int(df.TIME.max())}_iterations_{int(df.ITERATION.max())}.png"
+    filename = f"simulation_statistics_time_{int(df.TIME.max())}_iterations_{int(df.ITERATION.max())}2.png"
     savefig(filename, dpi=150, bbox_inches="tight")
     close()
     print(f"Saved as  \"{filename}\"...")
 
 
 if __name__ == "__main__":
-    CSV_FILE_PATH = r"../../simulation_data.csv"
+    CSV_FILE_PATH = r"../../simulation_data3.csv"
     visualize_crossroads_simulation(CSV_FILE_PATH)

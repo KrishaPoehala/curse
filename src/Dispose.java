@@ -18,7 +18,6 @@ class Dispose extends Element {
     public double getMeanTimeInSystem(){
         return processedMessages
                 .stream()
-                .filter(x -> !x.isInterupted)
                 .mapToDouble(m -> m.timeOut - m.timeIn)
                 .average()
                 .orElse(0.0);

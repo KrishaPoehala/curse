@@ -19,7 +19,7 @@ class BackupChannel extends Channel {
         this.isAsleep = false;
         //when the backupchannel is activated its queue size has to be updated
         //to reflect current queue's state
-        this.queueSize = queue.size();
+        this.queueSize = this.buffer.queue.size();
         this.tNext = tNext;
     }
 

@@ -7,7 +7,6 @@ class Buffer extends Element {
     private BackupChannel backupChannel;
     private double meanQueue;
 
-
     public Buffer(String name) {
         super(name);
         queue = new LinkedList<>();
@@ -31,13 +30,12 @@ class Buffer extends Element {
         super.outAct();
     }
 
-    public int lostM = 0;
     public void processQueue() {
         if(this.mainChannel.canTakeMessage()){
-            this.mainChannel.inAct(queue.poll());
+            this.mainChannel.inAct(null);
         }
         else if(this.backupChannel.canTakeMessage()){
-            this.backupChannel.inAct(queue.poll());
+            this.backupChannel.inAct(null);
         }
     }
 
